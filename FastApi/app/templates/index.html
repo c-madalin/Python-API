@@ -8,40 +8,11 @@
 </head>
 <body>
     <h1>Item List</h1>
+    <div id="input-container">
+        <input type="text" id="item-input" placeholder="Add a new item" onkeypress="handleKeyPress(event)">
+        <button onclick="addItem()">Add Item</button>
+    </div>
     <ul id="item-list"></ul>
-    <input type="text" id="item-input" placeholder="Add a new item">
-    <button onclick="addItem()">Add Item</button>
-
-    <script>
-        // Fetch and display items
-        async function fetchItems() {
-            const response = await fetch('/items');
-            const items = await response.json();
-            const itemList = document.getElementById('item-list');
-            itemList.innerHTML = '';
-            items.forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = item;
-                itemList.appendChild(li);
-            });
-        }
-
-        // Add a new item
-        async function addItem() {
-            const itemInput = document.getElementById('item-input');
-            const item = itemInput.value;
-            if (!item) return alert('Please enter an item!');
-            await fetch('/items', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ item })
-            });
-            itemInput.value = '';
-            fetchItems();
-        }
-
-        // Load items on page load
-        fetchItems();
-    </script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

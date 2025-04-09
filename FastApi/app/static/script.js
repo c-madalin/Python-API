@@ -1,42 +1,36 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const itemInput = document.getElementById("itemInput");
-    const addItemBtn = document.getElementById("addItemBtn");
-    const itemList = document.getElementById("itemList");
-
-    async function fetchItems() {
-        let response = await fetch("/items");
-        let items = await response.json();
-        itemList.innerHTML = "";
-        items.forEach((item, index) => {
-            let li = document.createElement("li");
-            li.textContent = `${index + 1}. ${item}`;
-            itemList.appendChild(li);
-        });
-    }
-
-    async function addItem() {
-        let item = itemInput.value.trim();
-        if (!item) return alert("Please enter an item!");
-        
-        await fetch("/items", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ item })
-        });
-
-        itemInput.value = "";
-        fetchItems();
-    }
-
-    // Click event for button
-    addItemBtn.addEventListener("click", addItem);
-
-    // Enter key event
-    itemInput.addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            addItem();
-        }
+// Fetch and display items from the server
+async function fetchItems() {
+    const response = await fetch('/items');
+    const items = await response.json();
+    const itemList = document.getElementById('item-list');
+    itemList.innerHTML = '';
+    items.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        itemList.appendChild(li);
     });
+}
 
+// Add a new item to the server
+async function addItem() {
+    const itemInput = document.getElementById('item-input');
+    const item = itemInput.value;
+    if (!item) return alert('Please enter an item!');
+    await fetch('/items', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ item })
+    });
+    itemInput.value = '';
     fetchItems();
-});
+}
+
+// Handle Enter key press
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        addItem();
+    }
+}
+
+// Load items on page load
+fetchItems();
